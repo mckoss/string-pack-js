@@ -1,0 +1,12 @@
+#!/bin/bash
+# configure-project --- Install dependencies for developing.
+export TOOLS_DIR="$(unset CDPATH; cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
+source $TOOLS_DIR/use
+
+set -e
+
+cd $PROJ_DIR
+
+echo -e "\nUpdating npm packages ..."
+npm update
+npm outdated
