@@ -16,6 +16,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/chai": "^3.4.34",
+    "@types/escodegen": "0.0.6",
     "@types/esprima": "^2.1.33",
     "@types/mocha": "^2.2.33",
     "@types/node": "^6.0.52",
@@ -26,6 +27,7 @@
     "typescript": "^2.1.4"
   },
   "dependencies": {
+    "escodegen": "^1.8.1",
     "esprima": "^3.1.2"
   }
 }
