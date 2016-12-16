@@ -10,3 +10,9 @@ cd $PROJ_DIR
 echo -e "\nCompiling TypeScript files ..."
 time tsc
 chmod +x lib/index.js
+
+echo -e "\nPackaging ..."
+npm pack
+mkdir -p dist
+mv *.tgz dist
+ls -l dist
