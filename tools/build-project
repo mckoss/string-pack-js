@@ -1,0 +1,12 @@
+#!/bin/bash
+# build-project --- Build the project from sources.
+export TOOLS_DIR="$(unset CDPATH; cd $(dirname ${BASH_SOURCE[0]}) && pwd)"
+source $TOOLS_DIR/use
+
+set -e
+
+cd $PROJ_DIR
+
+echo -e "\nCompiling TypeScript files ..."
+time tsc
+chmod +x lib/index.js
