@@ -4,14 +4,14 @@ import * as fs from 'fs';
 
 // Command-line argument processing.
 export function main(args: string[]) {
-  if (args.length != 1) {
+  if (args.length !== 1) {
     throw new Error("Usage: string-pack-js <file.js>");
   }
   pack(args[0]);
 }
 
 // Pack a single file and write to '<name>.packed'.
-export function pack(name:string) {
+export function pack(name: string) {
   console.log("Packing: " + name);
 
   const binary = fs.readFileSync(name, 'utf8');

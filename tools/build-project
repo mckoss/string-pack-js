@@ -7,6 +7,8 @@ set -e
 
 cd $PROJ_DIR
 
+tslint --format=verbose src/*.ts src/test/*.ts
+
 echo -e "\nCompiling TypeScript files ..."
 time tsc
 chmod +x lib/index.js
