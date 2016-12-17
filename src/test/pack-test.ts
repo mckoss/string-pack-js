@@ -1,5 +1,7 @@
 import { assert } from 'chai';
 
+import { dataDrivenTest } from './data-test-helper';
+
 import * as fs from 'fs';
 
 import { pack } from '../pack';
@@ -8,19 +10,15 @@ import { zipSize } from '../util';
 const TEST_DATA_DIR = process.env.PROJ_DIR + '/src/test/data';
 
 suite("pack", () => {
-  test("no-strings", () => {
-    const result = pack('x=1;');
-    assert.equal(result, 'x=1;');
-  });
+  let tests = [
+    [ 'x=1;', 'x=1;' ],
+    [ "x=\'hello\';", "x=_.a;" ],
+    [ "x=\'hello\';y='goodbye';", "x=_.a;y=_.b;" ],
+  ];
 
-  test("one-string", () => {
-    const result = pack("x=\'hello\';");
-    assert.equal(result, "x=_.a;");
-  });
-
-  test("two-strings", () => {
-    const result = pack("x=\'hello\';y='goodbye';");
-    assert.equal(result, "x=_.a;y=_.b;");
+  dataDrivenTest(tests, (data, expect) => {
+    const result = pack(data);
+    assert.equal(result, expect);
   });
 
   test("firebase.js", () => {
