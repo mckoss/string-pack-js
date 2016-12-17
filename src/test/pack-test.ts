@@ -13,6 +13,6 @@ suite("pack", () => {
 
   test("one-string", () => {
     const result = pack(ONE_STRING);
-    assert.equal(result, ONE_STRING);
+    assert.equal(result, "x=_.a;");
   });
 });

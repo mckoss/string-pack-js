@@ -14,10 +14,7 @@ export function main(args: string[]) {
 export function pack(name: string) {
   console.log("Packing: " + name);
 
-  const binary = fs.readFileSync(name, 'utf8');
-  let contents: string;
-
-  contents = fs.readFileSync(name, 'utf8');
+  let contents = fs.readFileSync(name, 'utf8');
   console.log("File length: " + contents.length);
 }
 
