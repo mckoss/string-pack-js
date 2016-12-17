@@ -7,7 +7,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "sourceMap": true,
-    "noEmitOnError": true
+    "noUnusedParameters": true,
+    "noUnusedLocals": true
   },
   "exclude": [
     "lib",

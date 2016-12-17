@@ -7,14 +7,30 @@ set -e
 
 cd $PROJ_DIR
 
-tslint --format=verbose src/*.ts src/test/*.ts
+if ! tslint --format=verbose src/*.ts src/test/*.ts; then
+    LINT_ERROR=true
+fi
 
 echo -e "\nCompiling TypeScript files ..."
-time tsc
+if ! tsc; then
+    TSC_ERROR=true
+fi
 chmod +x lib/index.js
 
 echo -e "\nPackaging ..."
-npm pack
+npm pack 2>&1 | cat
 mkdir -p dist
 mv *.tgz dist
 ls -l dist
+
+if [[ "$LINT_ERROR" == "true" ]]; then
+    echo -e "\n================================"
+    echo "Fix lint errors!"
+    echo -e "================================\n"
+fi
+
+if [[ "$TSC_ERROR" == "true" ]]; then
+    echo -e "\n================================"
+    echo "Fix TypeScript errors!"
+    echo -e "================================\n"
+fi
