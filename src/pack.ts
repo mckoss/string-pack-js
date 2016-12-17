@@ -1,6 +1,6 @@
-import { parse } from 'esprima';
-import { generate } from 'escodegen';
-import { replace } from 'estraverse';
+import * as esprima from 'esprima';
+import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
 import { MemberExpression } from 'estree';
 
 import { toName } from './name-generator';
@@ -22,15 +22,17 @@ const STRING_TABLE = '_';
 // references to a shared string table.
 export function pack(program: string): string {
   let iProp = 0;
-  let ast = parse(program, PARSE_OPTIONS);
-  replace(ast, {
+  let ast = esprima.parse(program, PARSE_OPTIONS);
+
+  estraverse.replace(ast, {
     enter: (node, _) => {
       if (node.type === 'Literal' && typeof(node.value) === 'string') {
         return makeStringMember(iProp++);
       }
     },
   });
-  let result = generate(ast, GENERATE_OPTIONS);
+
+  let result = escodegen.generate(ast, GENERATE_OPTIONS);
   return result;
 }
 
