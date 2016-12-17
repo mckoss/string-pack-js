@@ -5,10 +5,15 @@ import { MemberExpression } from 'estree';
 
 import { toName } from './name-generator';
 
+const PARSE_OPTIONS = {
+  attachComment: true
+};
+
 const GENERATE_OPTIONS = {
   format: {
     compact: true
-  }
+  },
+  comment: true
 };
 
 const STRING_TABLE = '_';
@@ -17,11 +22,11 @@ const STRING_TABLE = '_';
 // references to a shared string table.
 export function pack(program: string): string {
   let iProp = 0;
-  let ast = parse(program);
+  let ast = parse(program, PARSE_OPTIONS);
   replace(ast, {
     enter: (node, _) => {
       if (node.type === 'Literal' && typeof(node.value) === 'string') {
-        return makeStringMember(iProp);
+        return makeStringMember(iProp++);
       }
     },
   });
