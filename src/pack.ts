@@ -57,17 +57,15 @@ class StringTable {
   }
 
   analyze() {
-    let duplicates: Array<[string, number]> = Object.keys(this.counts)
-      .filter((s) => this.counts[s] > 1)
-      .map((s) => [s, this.counts[s]]);
-    // Descending by count.
-    duplicates.sort((a, b) => b[1] - a[1]);
+    let duplicates: string[] = Object.keys(this.counts)
+      .filter((s) => this.counts[s] > 1);
+    duplicates.sort((a, b) => this.counts[b] - this.counts[a]);
 
     let i = 0;
-    for (let pair of duplicates) {
-      this.mapping[pair[0]] = i;
+    duplicates.forEach((s) => {
+      this.mapping[s] = i;
       i += 1;
-    }
+    });
   }
 }
 
