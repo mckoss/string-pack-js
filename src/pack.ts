@@ -4,6 +4,7 @@ import * as estraverse from 'estraverse';
 import { MemberExpression } from 'estree';
 
 import { toName } from './name-generator';
+import { Statistic } from './statistic';
 
 const PARSE_OPTIONS = {
   attachComment: true
@@ -34,6 +35,21 @@ export function pack(program: string): string {
 
   let result = escodegen.generate(ast, GENERATE_OPTIONS);
   return result;
+}
+
+export function stringStats(program: string): {[key: string]: Statistic} {
+  const ast = esprima.parse(program);
+  let lengths = new Statistic();
+
+  estraverse.traverse(ast, {
+    enter: (node, _) => {
+      if (node.type === 'Literal' && typeof(node.value) === 'string') {
+        lengths.sample(node.value.length);
+      }
+    }
+  });
+
+  return { lengths };
 }
 
 export function makeStringMember(i: number): MemberExpression {

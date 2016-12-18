@@ -1,10 +1,10 @@
 export class Statistic {
   count = 0;
+  sum = 0;
+  sumSquares = 0;
+
   min: number;
   max: number;
-
-  private sum = 0;
-  private sumSquares = 0;
 
   get average(): number | undefined {
     if (this.count === 0) {
