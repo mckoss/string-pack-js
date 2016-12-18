@@ -4,7 +4,7 @@ import { dataDrivenTest } from './data-test-helper';
 
 import * as fs from 'fs';
 
-import { pack } from '../pack';
+import { pack, stringStats } from '../pack';
 import { zipSize } from '../util';
 
 const TEST_DATA_DIR = process.env.PROJ_DIR + '/src/test/data';
@@ -24,18 +24,20 @@ suite("pack", () => {
   test("firebase.js", () => {
     const binary = fs.readFileSync(TEST_DATA_DIR + '/firebase.js', 'utf8');
     const packed = pack(binary);
-    const data = [binary, packed];
-    const info = data.map((c) => {
-      let result: string[] = [];
-      result.push("Unpacked size: " + c.length);
-      result.push("Packed size: " + zipSize(c));
-      result.push("Sample: ");
-      const codeStart = c.indexOf('var firebase');
-      result.push(c.slice(codeStart, codeStart + 300));
-      return result.join('\n');
-    });
-    console.log(info.join('\n========\n'));
     assert.isBelow(packed.length, binary.length);
     assert.isBelow(zipSize(packed), zipSize(binary));
+  });
+});
+
+suite("string-stats", () => {
+  let tests = [
+    [ 'x=1;', {count: 0, average: undefined} ],
+    [ 'a="a";b="b";', {count: 2, average: 1} ],
+  ];
+
+  dataDrivenTest(tests, (data, expect) => {
+    let stats = stringStats(data)['lengths'];
+    assert.equal(stats.count, expect.count);
+    assert.equal(stats.average, expect.average);
   });
 });

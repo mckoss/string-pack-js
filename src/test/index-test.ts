@@ -5,7 +5,7 @@ import * as index from '../index';
 suite("index", () => {
   test("export-symbols", () => {
     assert.isDefined(index.main);
-    assert.isDefined(index.pack);
+    assert.isDefined(index.packFile);
   });
 
   test("missing-args", () => {
