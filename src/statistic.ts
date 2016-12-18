@@ -1,8 +1,15 @@
+interface Range {
+  index: number;
+  first: number;
+  next: number;
+}
+
 export class Statistic {
   count = 0;
   sum = 0;
   sumSquares = 0;
   histogram: number[] = [];
+  buckets: number[] = [];
 
   min: number;
   max: number;
@@ -11,7 +18,10 @@ export class Statistic {
   // break points. Each number defined the low end of the range of a bucket. We
   // extrapolate an infinite number of buckets based on the difference of the
   // last two listed.
-  constructor(private buckets?: number[]) {
+  constructor(buckets?: number[]) {
+    if (buckets) {
+      this.buckets = buckets;
+    }
   }
 
   get average(): number | undefined {
@@ -21,36 +31,75 @@ export class Statistic {
     return this.sum / this.count;
   }
 
-  sample(x: number) {
-    this.sum += x;
-    this.sumSquares += x * x;
-    this.count += 1;
+  private get hasBuckets(): boolean {
+    return this.buckets.length > 0;
+  }
 
-    if (!this.buckets || this.buckets.length === 0) {
-      return;
-    }
-
+  rangesIterator(): () => Range {
     let i = 0;
     let delta = 1;
     let base = this.buckets[0];
     let next: number;
-    while (true) {
-      if (this.histogram[i] === undefined) {
-        this.histogram[i] = 0;
-      }
+
+    return () => {
       if (i + 1 < this.buckets.length) {
         next = this.buckets[i + 1];
         delta = next - base;
       } else {
         next = base + delta;
       }
-      if (x >= base && x < next) {
-        break;
-      }
+      let value = {
+        index: i,
+        first: base,
+        next
+      };
       i += 1;
       base = next;
+      return value;
+    };
+  }
+
+  sample(x: number) {
+    this.sum += x;
+    this.sumSquares += x * x;
+    this.count += 1;
+
+    if (!this.hasBuckets) {
+      return;
     }
 
-    this.histogram[i] += 1;
+    let next = this.rangesIterator();
+    let range: Range;
+    while (true) {
+      range = next();
+      if (this.histogram[range.index] === undefined) {
+        this.histogram[range.index] = 0;
+      }
+      if (x >= range.first && x < range.next) {
+        break;
+      }
+    }
+
+    this.histogram[range.index] += 1;
+  }
+
+  histogramReport(): string {
+    if (!this.hasBuckets) {
+      throw new Error("No histogram data collected.");
+    }
+
+    let results: string[] = [];
+
+    let next = this.rangesIterator();
+    let range: Range;
+    while (true) {
+      range = next();
+      if (!this.histogram[range.index]) {
+        break;
+      }
+      results.push(`[${range.first}...${range.next}): ` +
+                   `${this.histogram[range.index]}`);
+    }
+    return results.join('\n');
   }
 }

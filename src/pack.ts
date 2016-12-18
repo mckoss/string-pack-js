@@ -19,6 +19,21 @@ const GENERATE_OPTIONS = {
 
 const STRING_TABLE = '_';
 
+export function stringStats(program: string): {[key: string]: Statistic} {
+  const ast = esprima.parse(program);
+  let lengths = new Statistic([0, 1, 2, 3, 4, 5, 10, 20, 50, 100]);
+
+  estraverse.traverse(ast, {
+    enter: (node, _) => {
+      if (node.type === 'Literal' && typeof(node.value) === 'string') {
+        lengths.sample(node.value.length);
+      }
+    }
+  });
+
+  return { lengths };
+}
+
 // Transpile a JavaScript program by replacing its strings with shared
 // references to a shared string table.
 export function pack(program: string): string {
@@ -35,21 +50,6 @@ export function pack(program: string): string {
 
   let result = escodegen.generate(ast, GENERATE_OPTIONS);
   return result;
-}
-
-export function stringStats(program: string): {[key: string]: Statistic} {
-  const ast = esprima.parse(program);
-  let lengths = new Statistic();
-
-  estraverse.traverse(ast, {
-    enter: (node, _) => {
-      if (node.type === 'Literal' && typeof(node.value) === 'string') {
-        lengths.sample(node.value.length);
-      }
-    }
-  });
-
-  return { lengths };
 }
 
 export function makeStringMember(i: number): MemberExpression {

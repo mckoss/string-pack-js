@@ -22,6 +22,7 @@ export function packFile(name: string) {
   console.log(`File length: ${contents.length}`);
   console.log(`Total string size: ${stats['lengths'].sum} ` +
               `(from ${stats['lengths'].count} strings).`);
+  console.log(stats['lengths'].histogramReport());
 
   const packed = pack(contents);
   const bytesSaved = contents.length - packed.length;
