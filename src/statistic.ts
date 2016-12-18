@@ -100,6 +100,8 @@ export class Statistic {
       results.push(`[${range.first}...${range.next}): ` +
                    `${this.histogram[range.index]}`);
     }
+    results.push(`All Total: ${this.sum} (from ${this.count} entries).`);
+
     return results.join('\n');
   }
 }

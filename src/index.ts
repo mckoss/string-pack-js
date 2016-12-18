@@ -20,9 +20,8 @@ export function packFile(name: string) {
   const stats = stringStats(contents);
 
   console.log(`File length: ${contents.length}`);
-  console.log(`Total string size: ${stats['lengths'].sum} ` +
-              `(from ${stats['lengths'].count} strings).`);
-  console.log(stats['lengths'].histogramReport());
+  console.log("All lengths:\n" + stats['lengths'].histogramReport());
+  console.log("Duplicates:\n" + stats['duplicates'].histogramReport());
 
   const packed = pack(contents);
   const bytesSaved = contents.length - packed.length;

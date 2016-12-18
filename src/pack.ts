@@ -22,16 +22,23 @@ const STRING_TABLE = '_';
 export function stringStats(program: string): {[key: string]: Statistic} {
   const ast = esprima.parse(program);
   let lengths = new Statistic([0, 1, 2, 3, 4, 5, 10, 20, 50, 100]);
+  let duplicates = new Statistic([0, 1, 2, 3, 4, 5, 10, 20, 50, 100]);
+  let dups: {[s: string]: boolean} = {};
 
   estraverse.traverse(ast, {
     enter: (node, _) => {
       if (node.type === 'Literal' && typeof(node.value) === 'string') {
         lengths.sample(node.value.length);
+        if (dups[node.value]) {
+          duplicates.sample(node.value.length);
+        } else {
+          dups[node.value] = true;
+        }
       }
     }
   });
 
-  return { lengths };
+  return { lengths, duplicates };
 }
 
 // Transpile a JavaScript program by replacing its strings with shared
