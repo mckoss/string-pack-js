@@ -19,3 +19,5 @@ if [[ ! -d "node_modules" ]]; then
 fi
 
 mocha lib/test --ui tdd --require "source-map-support/register" "$@"
+
+string-pack-js src/test/data/firebase.js
