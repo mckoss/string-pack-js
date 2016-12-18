@@ -18,7 +18,7 @@ suite("Statistic", () => {
   dataDrivenTest(tests, (data: any, expect: any) => {
     let stats = new Statistic(data.buckets);
     data.samples.forEach((x: number) => stats.sample(x));
-    if (expect.count != undefined) {
+    if (expect.count !== undefined) {
       assert.equal(stats.count, expect.count);
     }
     if (expect.average !== undefined) {
