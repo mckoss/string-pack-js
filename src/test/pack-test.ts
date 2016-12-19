@@ -12,8 +12,8 @@ const TEST_DATA_DIR = process.env.PROJ_DIR + '/src/test/data';
 suite("pack", () => {
   let tests = [
     [ 'x=1;', 'x=1;' ],
-    [ "x=\'hello\';", "x=_.a;" ],
-    [ "x=\'hello\';y='goodbye';", "x=_.a;y=_.b;" ],
+    [ "x=\'hello\';", "x=\'hello\';" ],
+    [ "x=\'hello\';y='hello';", "_={a:\"hello\"};x=_.a;y=_.a;" ],
   ];
 
   dataDrivenTest(tests, (data, expect) => {

@@ -18,6 +18,8 @@ if [[ ! -d "node_modules" ]]; then
     exit 1
 fi
 
-mocha lib/test --ui tdd --require "source-map-support/register" "$@"
+if ! mocha lib/test --ui tdd --require "source-map-support/register" "$@"; then
+    echo "Unit tests failed."
+fi
 
 string-pack-js src/test/data/firebase.js

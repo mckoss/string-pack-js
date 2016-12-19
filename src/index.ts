@@ -28,7 +28,7 @@ export function packFile(name: string) {
   const percentSaved = Math.floor(100 * bytesSaved / contents.length);
   console.log(`Packed size: ${packed.length} (saved ${bytesSaved} or ` +
               `${percentSaved}%).`);
-  fs.writeFileSync(name + '.packed', 'utf8');
+  fs.writeFileSync(name + '.packed', packed, 'utf8');
 }
 
 // Call main() if run from command line (as opposed to required).
