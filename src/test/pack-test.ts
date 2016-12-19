@@ -13,7 +13,7 @@ suite("pack", () => {
   let tests = [
     [ 'x=1;', 'x=1;' ],
     [ "x=\'hello\';", "x=\'hello\';" ],
-    [ "x=\'hello\';y='hello';", "_={a:\"hello\"};x=_.a;y=_.a;" ],
+    [ "x=\'hello\';y='hello';", "_={a:\"hello\"};\nx=_.a;y=_.a;" ],
   ];
 
   dataDrivenTest(tests, (data, expect) => {
@@ -24,6 +24,9 @@ suite("pack", () => {
   test("firebase.js", () => {
     const binary = fs.readFileSync(TEST_DATA_DIR + '/firebase.js', 'utf8');
     const packed = pack(binary);
+    console.log(`Raw size: ${binary.length} => ${packed.length}`);
+    console.log(`Zipped size: ${zipSize(binary)} => ${zipSize(packed)}`);
+
     assert.isBelow(packed.length, binary.length);
     assert.isBelow(zipSize(packed), zipSize(binary));
   });
