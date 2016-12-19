@@ -141,6 +141,11 @@ export function pack(program: string): string {
 
   estraverse.replace(ast, {
     enter: (node, _) => {
+      // Work around bug in duplicate comment being passed as both leading and
+      // trailing in disctinct nodes -> remove any trailing comments.
+      if (node.trailingComments) {
+        delete node.trailingComments;
+      }
       if (node.type === 'Literal' && typeof(node.value) === 'string') {
         if (strings.isMapped(node.value)) {
           return makeStringMember(strings.mapping[node.value]);
